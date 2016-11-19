@@ -36,8 +36,11 @@ export default {
     };
   },
   beforeMount: function() {
+    // Set conversations list from cache
+    this.conversations = JSON.parse(localStorage.getItem('conversations-list'));
+
     const payload = {
-      token: localStorage.getItem('qowala-token'),
+      token: localStorage.getItem('qowala-token')
     };
     this.$socket.emit('get/conversations', payload);
   },
@@ -76,6 +79,8 @@ export default {
 		'return/threadlist': function (threadList) {
       console.log('received thread list: ', threadList);
       this.conversations = threadList;
+      // Set conversation list in localStorage as cache
+      localStorage.setItem('conversations-list', JSON.stringify(threadList));
 		},
 		'chat message': function (msg) {
       // Reload thread list when new message
