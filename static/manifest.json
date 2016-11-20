@@ -1,0 +1,15 @@
+{
+  "short_name": "Qowala",
+  "name": "Qowala messaging app",
+  "icons": [
+    {
+      "src": "static/img/favicon.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait"
+}
+
