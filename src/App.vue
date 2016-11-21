@@ -10,7 +10,11 @@ export default {
 	sockets: {
 		'err': function(err) {
 			console.log('An error occured: ', err);
-		}
+		},
+    'auth failed': function(err) {
+      console.log('redirecting to login');
+      this.$router.push('/login');
+    }
 	}
 };
 </script>
