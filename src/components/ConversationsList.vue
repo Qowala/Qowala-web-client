@@ -1,24 +1,26 @@
 <template>
   <div>
     <ul id="conversations">
-      <li v-for="conversation in conversations">
+      <li class="conversation" v-for="conversation in conversations">
         <router-link :to="{ name: 'conversation', params: { conversationID: conversation.threadID , conversationName: conversation.name}}">
-          {{ conversation.name }}
           <template v-if="conversation.imageSrc">
-            <img v-bind:src="conversation.imageSrc" width="30px"/>
+            <img v-bind:src="conversation.imageSrc" class="conversation-img"/>
           </template>
           <!-- Temporary placeholder if conversation has no image -->
           <template v-else>
-            <div style="width: 30px; height: 30px; display: inline-block; background-color: gray;"></div>
+            <div class="conversation-img-default"></div>
           </template>
-          {{ conversation.snippet }}
+          <div class="conversation-name">{{ conversation.name }}</div>
+          <template v-if="conversation.snippet">
+            <div class="conversation-snippet">{{ conversation.snippet }}</div>
+          </template>
           <!-- Display images in snippet if there are some -->
           <template v-for="attachment in conversation.snippetAttachments">
-            <template v-if="attachment.attach_type === 'photo' || attachment.attach_type === 'animated_image'">
-              <img v-bind:src="attachment.thumbnail_url"/>
+            <template class="conversation-snippet-attachment" v-if="attachment.attach_type === 'photo' || attachment.attach_type === 'animated_image'">
+              <img class="conversation-snippet-attachment" v-bind:src="attachment.thumbnail_url"/>
             </template>
             <template v-else>
-              <img v-bind:src="attachment.url"/>
+              <img class="conversation-snippet-attachment" v-bind:src="attachment.url"/>
             </template>
           </template>
         </router-link>
@@ -99,11 +101,57 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
-form select { width: 9%; margin-right: .5%; }
-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-#messages { list-style-type: none; margin: 0; padding: 0; }
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
+#conversations {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#conversations a {
+  text-decoration: none;
+  color: black;
+}
+
+.conversation {
+  display: inline-block;
+  padding: 20px;
+  position: relative;
+  width: 100%;
+}
+
+.conversation-img, .conversation-img-default {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 20px;
+}
+
+.conversation-img-default {
+  background-color: gray;
+}
+
+.conversation-name {
+  position: relative;
+  left: 60px;
+  color: gray;
+  font-size: 1.1em;
+}
+
+.conversation-snippet {
+  position: relative;
+  top: 10px;
+  left: 60px;
+  font-size: 1.2em;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-snippet-attachment {
+  position: relative;
+  top: 10px;
+  left: 60px;
+}
 </style>
