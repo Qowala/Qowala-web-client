@@ -6,7 +6,7 @@ import VueSocketio from 'vue-socket.io';
 import VueRouter from 'vue-router'
 
 import Login from './components/Login';
-import Conversation from './components/Conversation';
+import ConversationScreen from './components/ConversationScreen';
 import ConversationsList from './components/ConversationsList';
 
 Vue.use(VueRouter)
@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/conversation/:conversationID/:conversationName',
     name: 'conversation',
-    component: Conversation,
+    component: ConversationScreen,
     meta: { requiresAuth: true }
   }
 ]

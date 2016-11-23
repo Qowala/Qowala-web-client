@@ -1,28 +1,9 @@
 <template>
   <div>
     <ul id="conversations">
-      <li class="conversation" v-for="conversation in conversations">
-        <router-link :to="{ name: 'conversation', params: { conversationID: conversation.threadID , conversationName: conversation.name}}">
-          <template v-if="conversation.imageSrc">
-            <img v-bind:src="conversation.imageSrc" class="conversation-img"/>
-          </template>
-          <!-- Temporary placeholder if conversation has no image -->
-          <template v-else>
-            <div class="conversation-img-default"></div>
-          </template>
-          <div class="conversation-name">{{ conversation.name }}</div>
-          <template v-if="conversation.snippet">
-            <div class="conversation-snippet">{{ conversation.snippet }}</div>
-          </template>
-          <!-- Display images in snippet if there are some -->
-          <template v-for="attachment in conversation.snippetAttachments">
-            <template class="conversation-snippet-attachment" v-if="attachment.attach_type === 'photo' || attachment.attach_type === 'animated_image'">
-              <img class="conversation-snippet-attachment" v-bind:src="attachment.thumbnail_url"/>
-            </template>
-            <template v-else>
-              <img class="conversation-snippet-attachment" v-bind:src="attachment.url"/>
-            </template>
-          </template>
+      <li class="conversation" v-for="conversationInfo in conversations">
+        <router-link :to="{ name: 'conversation', params: { conversationID: conversationInfo.threadID , conversationName: conversationInfo.name}}">
+          <conversation v-bind:info="conversationInfo"></conversation>
         </router-link>
       </li>
     </ul>
@@ -30,8 +11,13 @@
 </template>
 
 <script>
+import Conversation from './Conversation';
+
 export default {
   name: 'conversations-list',
+  components: {
+    Conversation
+  },
   data() {
     return {
       conversations: [],
@@ -117,41 +103,5 @@ export default {
   padding: 20px;
   position: relative;
   width: 100%;
-}
-
-.conversation-img, .conversation-img-default {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  left: 20px;
-}
-
-.conversation-img-default {
-  background-color: gray;
-}
-
-.conversation-name {
-  position: relative;
-  left: 60px;
-  color: gray;
-  font-size: 1.1em;
-}
-
-.conversation-snippet {
-  position: relative;
-  top: 10px;
-  left: 60px;
-  font-size: 1.2em;
-  width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.conversation-snippet-attachment {
-  position: relative;
-  top: 10px;
-  left: 60px;
 }
 </style>
