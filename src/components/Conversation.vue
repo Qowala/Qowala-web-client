@@ -80,6 +80,10 @@ export default {
   left: 60px;
   color: gray;
   font-size: 1.1em;
+	overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60%;
 }
 
 .conversation-time {
