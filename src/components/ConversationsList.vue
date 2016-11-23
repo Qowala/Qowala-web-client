@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="availability-header">Right now you are <span class="availability-status">{{ currentAvailability }}</span></div>
     <ul id="conversations">
       <li class="conversation" v-for="conversationInfo in conversations">
         <router-link :to="{ name: 'conversation', params: { conversationID: conversationInfo.threadID , conversationName: conversationInfo.name}}">
@@ -21,6 +22,7 @@ export default {
   data() {
     return {
       conversations: [],
+      currentAvailability: 'available'
     };
   },
   beforeMount: function() {
@@ -87,6 +89,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.availability-header {
+  background-color: #3AD78D;
+  height: 20px;
+  padding: 15px;
+  text-align: center;
+  color: #b0efd1;
+  font-size: 1.2em;
+}
+
+.availability-header .availability-status {
+  color: white;
+  text-shadow: 0px 2px 3px #2da76e;
+}
+
 #conversations {
   list-style-type: none;
   margin: 0;
