@@ -1,26 +1,10 @@
 <template>
   <div>
+    <div class="availability-header">Right now you are <span class="availability-status">{{ currentAvailability }}</span></div>
     <ul id="conversations">
-      <li v-for="conversation in conversations">
-        <router-link :to="{ name: 'conversation', params: { conversationID: conversation.threadID , conversationName: conversation.name}}">
-          {{ conversation.name }}
-          <template v-if="conversation.imageSrc">
-            <img v-bind:src="conversation.imageSrc" width="30px"/>
-          </template>
-          <!-- Temporary placeholder if conversation has no image -->
-          <template v-else>
-            <div style="width: 30px; height: 30px; display: inline-block; background-color: gray;"></div>
-          </template>
-          {{ conversation.snippet }}
-          <!-- Display images in snippet if there are some -->
-          <template v-for="attachment in conversation.snippetAttachments">
-            <template v-if="attachment.attach_type === 'photo' || attachment.attach_type === 'animated_image'">
-              <img v-bind:src="attachment.thumbnail_url"/>
-            </template>
-            <template v-else>
-              <img v-bind:src="attachment.url"/>
-            </template>
-          </template>
+      <li class="conversation" v-for="conversationInfo in conversations">
+        <router-link :to="{ name: 'conversation', params: { conversationID: conversationInfo.threadID , conversationName: conversationInfo.name}}">
+          <conversation v-bind:info="conversationInfo"></conversation>
         </router-link>
       </li>
     </ul>
@@ -28,11 +12,17 @@
 </template>
 
 <script>
+import Conversation from './Conversation';
+
 export default {
   name: 'conversations-list',
+  components: {
+    Conversation
+  },
   data() {
     return {
       conversations: [],
+      currentAvailability: 'available'
     };
   },
   beforeMount: function() {
@@ -99,11 +89,36 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
-form select { width: 9%; margin-right: .5%; }
-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-#messages { list-style-type: none; margin: 0; padding: 0; }
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
+.availability-header {
+  background-color: #3AD78D;
+  height: 20px;
+  padding: 15px;
+  text-align: center;
+  color: #b0efd1;
+  font-size: 1.2em;
+}
+
+.availability-header .availability-status {
+  color: white;
+  text-shadow: 0px 2px 3px #2da76e;
+}
+
+#conversations {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#conversations a {
+  text-decoration: none;
+  color: black;
+}
+
+.conversation {
+  display: inline-block;
+  padding: 20px;
+  position: relative;
+  width: 100%;
+	height: 35px;
+}
 </style>

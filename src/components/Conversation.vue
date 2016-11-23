@@ -1,128 +1,113 @@
 <template>
   <div>
-    <div style="height: 30px; background-color: green; color: white; padding: 5px;">
-      {{ this.$route.params.conversationName }}
-    </div>
-    <ul id="messages">
-      <li v-for="message in messages">
-        [{{ message.timestampDatetime }}] {{ message.senderName }}: {{ message.body }}
-        <template v-for="attachment in message.attachments">
-          <template v-if="attachment.type === 'sticker'">
-            <img v-bind:src="attachment.url"  v-bind:width="attachment.width"/>
-          </template>
-          <template v-if="attachment.type === 'photo' || attachment.type === 'animated_image'">
-            <a v-bind:href="attachment.previewUrl">
-              <img v-bind:src="attachment.thumbnailUrl" v-bind:alt="attachment.name"/>
-            </a>
-          </template>
-          <template v-if="attachment.type === 'video'">
-            <video v-bind:src="attachment.url" width="150px" controls/></video>
-          </template>
-          <template v-else>
-            <img v-bind:src="attachment.image" v-bind:alt="attachment.title" width="150px"/>
-          </template>
-        </template>
-      </li>
-    </ul>
-    <form action="" v-on:submit.prevent="sendMsg">
-      <input v-model="messageInput" autocomplete="off" />
-      <select id="availability" v-model="availability">
-        <option id="available">Available</option>
-        <option id="unavailable">Unavailable</option>
-      </select>
-      <button>Send</button>
-    </form>
+    <template v-if="info.imageSrc">
+      <img v-bind:src="info.imageSrc" class="conversation-img"/>
+    </template>
+    <!-- Temporary placeholder if conversation has no image -->
+    <template v-else>
+      <div class="conversation-img-default"></div>
+    </template>
+    <div class="conversation-name">{{ info.name }}</div><div class="conversation-time">{{ this.timedelta }}</div>
+    <template v-if="info.snippet">
+      <div class="conversation-snippet">{{ info.snippet }}</div>
+    </template>
+    <!-- Display images in snippet if there are some -->
+    <template v-for="attachment in info.snippetAttachments">
+      <template class="conversation-snippet-attachment" v-if="attachment.attach_type === 'photo' || attachment.attach_type === 'animated_image'">
+        <img class="conversation-snippet-attachment" v-bind:src="attachment.thumbnail_url"/>
+      </template>
+      <template v-else>
+        <img class="conversation-snippet-attachment" v-bind:src="attachment.url"/>
+      </template>
+    </template>
   </div>
 </template>
 
 <script>
 export default {
   name: 'conversation',
+  props: ['info'],
   data() {
     return {
-      messageInput: '',
-      messages: [],
-      availability: 'Available',
+      conversations: [],
     };
   },
-  created: function () {
-    // Set messages from cache
-    const history = JSON.parse(localStorage.getItem('conversations-history'));
-    if (history && history[this.$route.params.conversationID]) {
-      this.messages = history[this.$route.params.conversationID];
+  computed:  {
+    timedelta: function() {
+      // Property displays time delta like "6h ago"
+
+      const one_day=1000*60*60*24;
+      const one_hour=1000*60*60;
+      const one_minute=1000*60;
+      const conversationDate = new Date(this.info.timestamp);
+      const today = new Date();
+
+      // Calculate time delta from conversation to now
+      const timeDelta = (today.getTime()-conversationDate.getTime());
+
+      // Choose best unit to display according to time delta
+      const timeDeltaMinutes = timeDelta/(one_minute);
+      if (timeDeltaMinutes > 60) {
+        const timeDeltaHours = timeDelta/(one_hour);
+        if (timeDeltaHours > 24) {
+          const timeDeltaDays = timeDelta/(one_day);
+          return Math.ceil(timeDeltaDays) + 'd ago';
+        }
+        return Math.ceil(timeDeltaHours) + 'h ago';
+      }
+      return Math.ceil(timeDeltaMinutes) + 'm ago';
     }
-
-    const payload = {
-      token: localStorage.getItem('qowala-token'),
-      conversationID: this.$route.params.conversationID
-    };
-    this.$socket.emit('get/conversationHistory', payload);
-  },
-  methods: {
-    sendMsg: function sendMsg() {
-			const payload = {
-				token: localStorage.getItem('qowala-token'),
-				msg: this.messageInput,
-        conversationID: this.$route.params.conversationID
-			};
-      this.$socket.emit('chat message', payload);
-      this.messageInput = '';
-    },
-    notifyMe: function notifyMe(msg) {
-      const notifMsg = 'Qowala: ' + msg;
-      // Let's check whether notification permissions have already been granted
-      if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        var notification = new Notification(notifMsg);
-      }
-
-      // Otherwise, we need to ask the user for permission
-      else if (Notification.permission !== 'denied') {
-        Notification.requestPermission(function requestPermission (permission) {
-          // If the user accepts, let's create a notification
-          if (permission === "granted") {
-            var notification = new Notification(notifMsg);
-          }
-        });
-      }
-
-      // At last, if the user has denied notifications, and you
-      // want to be respectful there is no need to bother them any more.
-    }
-  },
-	sockets: {
-		'return/threadHistory': function (threadHistory) {
-      this.messages = threadHistory;
-      // Set history in localStorage as cache
-      var history = JSON.parse(localStorage.getItem('conversations-history')) || {};
-      history[this.$route.params.conversationID] = this.messages;
-      localStorage.setItem('conversations-history', JSON.stringify(history));
-		},
-		'chat message': function (msg) {
-      if (msg.conversationID === this.$route.params.conversationID){
-        this.messages.push(msg);
-      }
-
-			// Send notification only if user available
-			if (this.availability === 'Available') {
-				this.notifyMe(msg.body);
-			}
-		},
-    'need auth': function () {
-      console.log('redirecting to login');
-      this.$router.push('/login');
-    },
-	},
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
-form select { width: 9%; margin-right: .5%; }
-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-#messages { list-style-type: none; margin: 0; padding: 0; }
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
+.conversation-img, .conversation-img-default {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 20px;
+}
+
+.conversation-img-default {
+  background-color: gray;
+}
+
+.conversation-name {
+  position: relative;
+  left: 60px;
+  color: gray;
+  font-size: 1.1em;
+	overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60%;
+}
+
+.conversation-time {
+  position: absolute;
+  right: 55px;
+  top: 20px;
+  color: gray;
+  font-size: 1.1em;
+}
+
+.conversation-snippet {
+  position: relative;
+  top: 10px;
+  left: 60px;
+  font-size: 1.2em;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-snippet-attachment {
+  position: relative;
+  top: 10px;
+  left: 60px;
+}
 </style>
