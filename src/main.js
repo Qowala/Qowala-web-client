@@ -1,4 +1,5 @@
 require('./assets/css/normalize.css');
+require('./assets/css/style.css');
 
 import Vue from 'vue';
 import App from './App';
