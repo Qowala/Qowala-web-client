@@ -71,6 +71,8 @@ export default {
 
 #login-screen h1 {
   margin-bottom: 20px;
+  font-family: 'WorkSans-Bold', Arial, sans-serif;
+  font-size: 1.6em;
 }
 
 #login-screen p {
@@ -101,7 +103,8 @@ export default {
 #login-screen input[type="text"]::placeholder,
 #login-screen input[type="password"]::placeholder {
   text-transform: uppercase;
-  font-size: 0.8em;
+  font-size: 0.6em;
+  font-family: 'WorkSans-Bold', Arial, sans-serif;
 }
 
 #login-screen label {
@@ -109,7 +112,15 @@ export default {
   width: 130px;
   margin: 10px auto 0;
   position: relative;
-  right: 75px;
+  right: 65px;
+}
+
+#login-screen input[type="text"]::placeholder,
+#login-screen input[type="password"]::placeholder {
+  color: #98ECC4;
+  position: relative;
+  right: 12px;
+  bottom: 6px;
 }
 
 #login-screen form input {
@@ -122,10 +133,17 @@ export default {
   border: solid 2px white;
 }
 
+#login-screen form input:focus {
+  -moz-box-shadow:    0px 5px 16px 1px #19B96D;
+  -webkit-box-shadow: 0px 5px 16px 1px #19B96D;
+  box-shadow:         0px 5px 16px 1px #19B96D;
+}
+
 #login-screen input[type="text"],
 #login-screen input[type="password"] {
   font-size: 0.9em;
   padding-left: 20px;
+  font-family: 'WorkSans-Bold', Arial, sans-serif;
 }
 
 #login-screen input[type="submit"] {
@@ -133,6 +151,8 @@ export default {
   color: #3AD78D;
   width: 100px;
   margin-top: 40px;
+  font-family: 'WorkSans-Bold', Arial, sans-serif;
+  font-size: 0.9em;
 }
 
 #login-screen #loading,
