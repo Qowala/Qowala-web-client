@@ -26,11 +26,7 @@
     </ul>
     <form action="" v-on:submit.prevent="sendMsg">
       <input v-model="messageInput" autocomplete="off" />
-      <select id="availability" v-model="availability">
-        <option id="available">Available</option>
-        <option id="unavailable">Unavailable</option>
-      </select>
-      <button>Send</button>
+      <button  v-bind:class="{ enabled: isSendingEnabled }"><i class="fa fa-paper-plane-o"></i> </button>
     </form>
   </div>
 </template>
@@ -44,6 +40,11 @@ export default {
       messages: [],
       availability: 'Available',
     };
+  },
+  computed: {
+    isSendingEnabled: function () {
+      return this.messageInput !== '';
+    }
   },
   created: function () {
     // Set messages from cache
@@ -60,13 +61,15 @@ export default {
   },
   methods: {
     sendMsg: function sendMsg() {
-			const payload = {
-				token: localStorage.getItem('qowala-token'),
-				msg: this.messageInput,
-        conversationID: this.$route.params.conversationID
-			};
-      this.$socket.emit('chat message', payload);
-      this.messageInput = '';
+      if (isSendingEnabled) {
+        const payload = {
+          token: localStorage.getItem('qowala-token'),
+          msg: this.messageInput,
+          conversationID: this.$route.params.conversationID
+        };
+        this.$socket.emit('chat message', payload);
+        this.messageInput = '';
+      }
     },
     notifyMe: function notifyMe(msg) {
       const notifMsg = 'Qowala: ' + msg;
@@ -118,11 +121,53 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-form input { border: 0; padding: 10px; width: 80%; margin-right: .5%; }
-form select { width: 9%; margin-right: .5%; }
-form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-#messages { list-style-type: none; margin: 0; padding: 0; }
+form {
+  background: #fff;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 20px);
+  text-align: center;
+}
+
+form input {
+  border: 0;
+  padding: 10px;
+  width: 65%;
+  height: 20px;
+  margin-right: 5%;
+  margin-left: 10px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  color: #4a4a4a;
+  font-size: 1.25em;
+  padding: 10px 20px;
+}
+
+form button {
+  background: none;
+  border: none;
+  padding: 10px;
+  color: #ccc;
+  font-size: 1.4em;
+  position: relative;
+  top: 2px;
+  right: 4px;
+  border-radius: 50%;
+}
+
+form button.enabled {
+  background-color: #3ad78d;
+  color: white;
+}
+
+#messages {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 60px;
+}
+
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
 </style>
