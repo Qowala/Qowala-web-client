@@ -4,25 +4,7 @@
       <button v-on:click="returnBack"><i class="fa fa-arrow-left"></i></button><span class="conversation-name">{{ this.$route.params.conversationName }}</span>
     </div>
     <ul id="messages">
-      <li v-for="message in messages">
-        [{{ message.timestampDatetime }}] {{ message.senderName }}: {{ message.body }}
-        <template v-for="attachment in message.attachments">
-          <template v-if="attachment.type === 'sticker'">
-            <img v-bind:src="attachment.url"  v-bind:width="attachment.width"/>
-          </template>
-          <template v-if="attachment.type === 'photo' || attachment.type === 'animated_image'">
-            <a v-bind:href="attachment.previewUrl">
-              <img v-bind:src="attachment.thumbnailUrl" v-bind:alt="attachment.name"/>
-            </a>
-          </template>
-          <template v-if="attachment.type === 'video'">
-            <video v-bind:src="attachment.url" width="150px" controls/></video>
-          </template>
-          <template v-else>
-            <img v-bind:src="attachment.image" v-bind:alt="attachment.title" width="150px"/>
-          </template>
-        </template>
-      </li>
+      <message v-bind:info="messageInfo" v-for="messageInfo in messages"></message>
     </ul>
     <form action="" v-on:submit.prevent="sendMsg">
       <input v-model="messageInput" autocomplete="off" />
@@ -32,8 +14,13 @@
 </template>
 
 <script>
+import Message from './Message';
+
 export default {
   name: 'conversation-screen',
+  components: {
+    Message
+  },
   data() {
     return {
       messageInput: '',
@@ -136,6 +123,7 @@ export default {
   font-family: 'WorkSans-Bold', Arial, sans-serif;
   font-size: 1.2em;
   text-shadow: 0px 1px 2px #2da76e;
+  z-index: 1;
 }
 
 .conversation-header button {
@@ -195,9 +183,7 @@ form button.enabled {
   margin: 0;
   padding: 0;
   padding-top: 40px;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
+  background-color: #f0f0f0;
 }
-
-#messages li { padding: 5px 10px; }
-#messages li:nth-child(odd) { background: #eee; }
 </style>
