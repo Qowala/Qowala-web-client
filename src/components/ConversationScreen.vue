@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div style="height: 30px; background-color: green; color: white; padding: 5px;">
-      {{ this.$route.params.conversationName }}
+    <div class="conversation-header">
+      <button v-on:click="returnBack"><i class="fa fa-arrow-left"></i></button><span class="conversation-name">{{ this.$route.params.conversationName }}</span>
     </div>
     <ul id="messages">
       <li v-for="message in messages">
@@ -26,7 +26,7 @@
     </ul>
     <form action="" v-on:submit.prevent="sendMsg">
       <input v-model="messageInput" autocomplete="off" />
-      <button  v-bind:class="{ enabled: isSendingEnabled }"><i class="fa fa-paper-plane-o"></i> </button>
+      <button v-bind:class="{ enabled: isSendingEnabled }"><i class="fa fa-paper-plane-o"></i></button>
     </form>
   </div>
 </template>
@@ -91,6 +91,9 @@ export default {
 
       // At last, if the user has denied notifications, and you
       // want to be respectful there is no need to bother them any more.
+    },
+    returnBack: function returnBack() {
+      this.$router.push('/');
     }
   },
 	sockets: {
@@ -121,6 +124,32 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.conversation-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 20px;
+  background-color: #3ad78d;
+  color: white;
+  padding: 10px;
+  font-family: 'WorkSans-Bold', Arial, sans-serif;
+  font-size: 1.2em;
+  text-shadow: 0px 1px 2px #2da76e;
+}
+
+.conversation-header button {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  color: white;
+  text-shadow: 0px 1px 2px #2da76e;
+}
+
+.conversation-header .conversation-name {
+  margin-left: 20px;
+}
+
 form {
   background: #fff;
   padding: 10px;
@@ -165,6 +194,7 @@ form button.enabled {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  padding-top: 40px;
   padding-bottom: 60px;
 }
 
