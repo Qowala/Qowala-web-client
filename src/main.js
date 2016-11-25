@@ -1,5 +1,6 @@
 require('./assets/css/normalize.css');
 require('./assets/css/style.css');
+require('./assets/font-awesome-4.7.0/css/font-awesome.min.css');
 
 import Vue from 'vue';
 import App from './App';

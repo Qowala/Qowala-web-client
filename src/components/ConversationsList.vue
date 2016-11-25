@@ -92,7 +92,7 @@ export default {
 .availability-header {
   background-color: #3AD78D;
   height: 20px;
-  padding: 15px;
+  padding: 10px;
   text-align: center;
   color: #b0efd1;
   font-size: 1.2em;
