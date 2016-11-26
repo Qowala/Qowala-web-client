@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     sendMsg: function sendMsg() {
-      if (isSendingEnabled) {
+      if (this.isSendingEnabled) {
         const payload = {
           token: localStorage.getItem('qowala-token'),
           msg: this.messageInput,
