@@ -13,7 +13,7 @@ import ConversationsList from './components/ConversationsList';
 
 Vue.use(VueRouter)
 
-Vue.use(VueSocketio, '//:3000'); // Automatically socket connect from url string
+Vue.use(VueSocketio, '//'); // Automatically socket connect from url string
 
 const routes = [
   {
