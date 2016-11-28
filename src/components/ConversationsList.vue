@@ -8,6 +8,13 @@
         </router-link>
       </li>
     </ul>
+    <div class="availability-setting">
+      Right now you are {{ currentAvailability }}
+      <div class="switch">
+        <input id="availability-toggle" type="checkbox" v-model="currentAvailability" true-value="available" false-value="unavailable">
+        <label for="availability-toggle"></label>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,7 +29,7 @@ export default {
   data() {
     return {
       conversations: [],
-      currentAvailability: 'available'
+      currentAvailability: localStorage.getItem('qowala-availability') || 'available'
     };
   },
   beforeMount: function() {
@@ -33,6 +40,11 @@ export default {
       token: localStorage.getItem('qowala-token')
     };
     this.$socket.emit('get/conversations', payload);
+  },
+  watch: {
+    currentAvailability: function (availability) {
+      localStorage.setItem('qowala-availability', this.currentAvailability);
+    }
   },
   methods: {
     sendMsg: function sendMsg() {
@@ -78,6 +90,11 @@ export default {
         token: localStorage.getItem('qowala-token'),
       };
       this.$socket.emit('get/conversations', payload);
+
+			// Send notification only if user available
+			if (this.currentAvailability === 'available') {
+				this.notifyMe(msg.body);
+			}
 		},
     'need auth': function () {
       console.log('redirecting to login');
@@ -120,5 +137,15 @@ export default {
   position: relative;
   width: 100%;
 	height: 35px;
+}
+
+.availability-setting {
+  width: 60%;
+  background-color: #f0f0f0;
+  border-radius: 25px;
+  padding: 10px 30px;
+  position: fixed;
+  bottom: 10px;
+  left: calc((40% - 60px) / 2);
 }
 </style>

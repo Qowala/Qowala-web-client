@@ -25,7 +25,7 @@ export default {
     return {
       messageInput: '',
       messages: [],
-      availability: 'Available',
+      currentAvailability: localStorage.getItem('qowala-availability') || 'available'
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
       }
 
 			// Send notification only if user available
-			if (this.availability === 'Available') {
+			if (this.currentAvailability === 'available') {
 				this.notifyMe(msg.body);
 			}
 		},
