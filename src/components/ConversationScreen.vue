@@ -25,7 +25,8 @@ export default {
     return {
       messageInput: '',
       messages: [],
-      currentAvailability: localStorage.getItem('qowala-availability') || 'available'
+      currentAvailability: localStorage.getItem('qowala-availability') || 'available',
+      isWindowBlured: true
     };
   },
   computed: {
@@ -45,6 +46,16 @@ export default {
       conversationID: this.$route.params.conversationID
     };
     this.$socket.emit('get/conversationHistory', payload);
+
+    window.onblur = function() {
+      this.isWindowBlured = true;
+      console.log('blured: ', this.isWindowBlured);
+    }
+
+    window.onfocus = function() {
+      this.isWindowBlured = false;
+      console.log('blured: ', this.isWindowBlured);
+    }
   },
   methods: {
     sendMsg: function sendMsg() {
@@ -65,7 +76,6 @@ export default {
       }
 
       Notification.requestPermission().then(function(result) {
-        console.log(result);
       });
 
       const notification = new Notification('New message:', options);
@@ -88,7 +98,7 @@ export default {
       }
 
 			// Send notification only if user available
-			if (this.currentAvailability === 'available') {
+			if (this.currentAvailability === 'available' && this.isWindowBlured) {
 				this.notifyMe(msg.body);
 			}
 		},

@@ -29,7 +29,8 @@ export default {
   data() {
     return {
       conversations: [],
-      currentAvailability: localStorage.getItem('qowala-availability') || 'available'
+      currentAvailability: localStorage.getItem('qowala-availability') || 'available',
+      isWindowBlured: false
     };
   },
   beforeMount: function() {
@@ -40,6 +41,14 @@ export default {
       token: localStorage.getItem('qowala-token')
     };
     this.$socket.emit('get/conversations', payload);
+
+    window.onblur = function() {
+      this.isWindowBlured = true;
+    }
+
+    window.onfocus = function() {
+      this.isWindowBlured = false;
+    }
   },
   watch: {
     currentAvailability: function (availability) {
@@ -62,7 +71,6 @@ export default {
       }
 
       Notification.requestPermission().then(function(result) {
-        console.log(result);
       });
 
       const notification = new Notification('New message:', options);
@@ -83,7 +91,7 @@ export default {
       this.$socket.emit('get/conversations', payload);
 
 			// Send notification only if user available
-			if (this.currentAvailability === 'available') {
+			if (this.currentAvailability === 'available' && this.isWindowBlured) {
 				this.notifyMe(msg.body);
 			}
 		},
