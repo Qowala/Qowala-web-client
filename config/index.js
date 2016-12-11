@@ -26,6 +26,12 @@ module.exports = {
          target: 'ws://localhost:3000',
          ws: true
       },
+      '/register': {
+         target: 'http://localhost:3000',
+      },
+      '/sendNotification': {
+         target: 'http://localhost:3000',
+      }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
