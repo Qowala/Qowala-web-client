@@ -51,7 +51,11 @@ export default {
         // Register a Service Worker.
         navigator.serviceWorker.register('static/service-worker.js')
         .then(function(registration) {
-        console.log('youhou, registered');
+          console.log('youhou, registered');
+
+          // Force update of service worker
+          registration.update();
+
           // Use the PushManager to get the user's subscription to the push service.
           return registration.pushManager.getSubscription()
           .then(function(subscription) {
