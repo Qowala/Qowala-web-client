@@ -68,17 +68,6 @@ export default {
 			};
       this.$socket.emit('chat message', payload);
       this.messageInput = '';
-    },
-    notifyMe: function notifyMe(msg) {
-      const options = {
-        body: msg,
-        icon: '/static/img/favicon.png'
-      }
-
-      Notification.requestPermission().then(function(result) {
-      });
-
-      const notification = new Notification('New message:', options);
     }
   },
 	sockets: {
@@ -94,11 +83,6 @@ export default {
         token: localStorage.getItem('qowala-token'),
       };
       this.$socket.emit('get/conversations', payload);
-
-			// Send notification only if user available
-			if (this.currentAvailability === 'available' && this.isWindowBlured) {
-				this.notifyMe(msg.body);
-			}
 		},
     'need auth': function () {
       console.log('redirecting to login');
