@@ -110,12 +110,13 @@ export default {
     }
   },
   sockets: {
-    'login ok': function (token) {
+    'login ok': function (payload) {
       this.loading = false;
-			localStorage.setItem('qowala-token', token);
+			localStorage.setItem('qowala-token', payload.token);
+      localStorage.setItem('qowala-availability', payload.availability);
       console.log('redirecting to conversations list');
       // Subsribe to service worker to get notifications
-      this.subscribeSw(token);
+      this.subscribeSw(payload.token);
       this.$router.push('/');
     },
     'login failed': function () {

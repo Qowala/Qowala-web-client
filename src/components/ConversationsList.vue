@@ -52,6 +52,11 @@ export default {
   },
   watch: {
     currentAvailability: function (availability) {
+      const payload = {
+        token: localStorage.getItem('qowala-token'),
+        availability: availability
+      };
+      this.$socket.emit('put/availability', payload);
       localStorage.setItem('qowala-availability', this.currentAvailability);
     }
   },
