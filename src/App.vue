@@ -1,18 +1,12 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    {{ this.subscription }}
   </div>
 </template>
 
 <script>
 export default {
   name: 'app',
-  data() {
-    return {
-      subscription: {},
-    };
-  },
 	sockets: {
 		'err': function(err) {
 			console.log('An error occured: ', err);

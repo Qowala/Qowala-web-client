@@ -51,8 +51,6 @@ export default {
         // Register a Service Worker.
         navigator.serviceWorker.register('static/service-worker.js')
         .then(function(registration) {
-          console.log('youhou, registered');
-
           // Force update of service worker
           registration.update();
 
@@ -61,7 +59,6 @@ export default {
           .then(function(subscription) {
             // If a subscription was found, return it.
             if (subscription) {
-              console.log('already a subscription: ', subscription);
               return subscription;
             }
 
@@ -86,25 +83,7 @@ export default {
             return registration.pushManager.subscribe({ userVisibleOnly: true,
             applicationServerKey: convertedVapidKey});
           });
-        }).then(function(subscription) {
-          // Retrieve the user's public key.
-          console.log('retrieving user key...');
-
-          this.subscription = subscription;
-          console.log('subscription added: ', subscription);
-
-          const payload = {
-            subscription: subscription,
-            notification: {
-              title: 'Bob',
-              body: 'heeeey it should work',
-              icon: '/static/img/favicon.png'
-            },
-            token: token
-          };
-
-          this.$socket.emit('swSendNotification', payload);
-        }.bind(this))
+        })
         .catch(function(error) {
           console.error('Service Worker Error: ', error);
         });
@@ -116,10 +95,10 @@ export default {
   sockets: {
     'login ok': function (payload) {
       this.loading = false;
-			localStorage.setItem('qowala-token', payload.token);
+      localStorage.setItem('qowala-token', payload.token);
       localStorage.setItem('qowala-availability', payload.availability);
       console.log('redirecting to conversations list');
-      // Subsribe to service worker to get notifications
+      // Subscribe to service worker to get notifications
       this.subscribeSw(payload.token);
       this.$router.push('/');
     },
