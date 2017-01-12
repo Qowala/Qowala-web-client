@@ -42,11 +42,9 @@ export default {
       this.email = '';
       this.password = '';
     },
-    subscribeSw: function(token) {
+    subscribeSw: function(applicationServerPublicKey) {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
         console.log('Service Worker and Push is supported');
-
-        const applicationServerPublicKey = 'BP5DsTGZtwA4cqV1vgTggxDdy-6fBY5I--_3fPCHAir9kUS5rR_vAzHKc0htxxGx_sFz-02liGu8PgoZr9DEr3Y';
 
         // Register a Service Worker.
         navigator.serviceWorker.register('static/service-worker.js')
@@ -99,7 +97,7 @@ export default {
       localStorage.setItem('qowala-availability', payload.availability);
       console.log('redirecting to conversations list');
       // Subscribe to service worker to get notifications
-      this.subscribeSw(payload.token);
+      this.subscribeSw(payload.applicationServerPublicKey);
       this.$router.push('/');
     },
     'login failed': function () {
