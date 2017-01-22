@@ -144,8 +144,6 @@ export default {
 
 .switch {
   position: relative;
-  display: flex;
-  align-items: center;
   width: 50px;
   height: 30px;
   background-color: #f0f0f0;
@@ -158,12 +156,14 @@ export default {
 .switch::before {
   content: 'ON';
   left: 5px;
+  bottom: 8px;
   color: #3AD78D;
 }
 
 .switch::after {
   content: 'OFF';
   right: 5px;
+  bottom: 8px;
   color: #d9d9d9;
 }
 
@@ -180,6 +180,8 @@ input#availability-toggle {
 .switch label {
   z-index: 2;
   position: absolute;
+  top: 4px;
+  left: 4px;
   background: #d9d9d9;
   width: 22px;
   height: 22px;
