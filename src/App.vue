@@ -12,7 +12,7 @@ export default {
 			console.log('An error occured: ', err);
 		},
     'auth failed': function(err) {
-      console.log('redirecting to login');
+      console.log('Redirecting to login');
       this.$router.push('/login');
     }
 	}

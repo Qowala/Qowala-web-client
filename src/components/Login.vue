@@ -41,13 +41,85 @@ export default {
       this.loading = true;
       this.email = '';
       this.password = '';
+    },
+    subscribeSw: function(applicationServerPublicKey, token) {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
+        console.log('Service Worker and Push is supported');
+
+        // Register a Service Worker.
+        navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('Registered service worker');
+
+          // Force update of service worker
+          registration.update();
+
+          // Use the PushManager to get the user's subscription to the push service.
+          return registration.pushManager.getSubscription()
+          .then(function(subscription) {
+            // If a subscription was found, return it.
+            if (subscription) {
+              console.log('Already a subscription: ', subscription);
+              return subscription;
+            }
+
+            function urlBase64ToUint8Array(base64String) {
+              const padding = '='.repeat((4 - base64String.length % 4) % 4);
+              const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+              const rawData = window.atob(base64);
+              const outputArray = new Uint8Array(rawData.length);
+
+              for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+              }
+              return outputArray;
+            }
+
+            const convertedVapidKey = urlBase64ToUint8Array(applicationServerPublicKey);
+            // Otherwise, subscribe the user (userVisibleOnly allows to specify that we don't plan to
+            // send notifications that don't have a visible effect for the user).
+            return registration.pushManager.subscribe({ userVisibleOnly: true,
+            applicationServerKey: convertedVapidKey});
+          });
+        }).then(function(subscription) {
+          // Retrieve the user's public key.
+          console.log('Retrieving user key...');
+
+          this.subscription = subscription;
+          console.log('Subscription added: ', subscription);
+
+          // Uncomment to test service workers
+          // const payload = {
+          //   subscription: subscription,
+          //   notification: {
+          //     title: 'Bob',
+          //     body: 'heeeey it should work',
+          //     icon: '/static/img/favicon.png'
+          //   },
+          //   token: token
+          // };
+          // this.$socket.emit('swSendNotification', payload);
+        }.bind(this))
+        .catch(function(error) {
+          console.error('Service Worker Error: ', error);
+        });
+      } else {
+        console.warn('Push messaging is not supported');
+      }
     }
   },
   sockets: {
-    'login ok': function (token) {
+    'login ok': function (payload) {
       this.loading = false;
-			localStorage.setItem('qowala-token', token);
+      localStorage.setItem('qowala-token', payload.token);
+      localStorage.setItem('qowala-availability', payload.availability);
       console.log('redirecting to conversations list');
+      // Subscribe to service worker to get notifications
+      this.subscribeSw(payload.applicationServerPublicKey, payload.token);
+
       this.$router.push('/');
     },
     'login failed': function () {

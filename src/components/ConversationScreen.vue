@@ -69,17 +69,6 @@ export default {
         this.messageInput = '';
       }
     },
-    notifyMe: function notifyMe(msg) {
-      const options = {
-        body: msg,
-        icon: '/static/img/favicon.png'
-      }
-
-      Notification.requestPermission().then(function(result) {
-      });
-
-      const notification = new Notification('New message:', options);
-    },
     returnBack: function returnBack() {
       this.$router.push('/');
     }
@@ -96,11 +85,6 @@ export default {
       if (msg.conversationID === this.$route.params.conversationID){
         this.messages.push(msg);
       }
-
-			// Send notification only if user available
-			if (this.currentAvailability === 'available' && this.isWindowBlured) {
-				this.notifyMe(msg.body);
-			}
 		},
     'need auth': function () {
       console.log('redirecting to login');
