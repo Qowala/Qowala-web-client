@@ -120,6 +120,9 @@ export default {
 }
 
 #conversations {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100vw;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -139,12 +142,66 @@ export default {
 }
 
 .availability-setting {
-  width: 60%;
-  background-color: #f0f0f0;
-  border-radius: 25px;
-  padding: 10px 30px;
   position: fixed;
-  bottom: 10px;
-  left: calc((40% - 60px) / 2);
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  right: 20px;
+  border: 1px solid #f0f0f0;
+  border-radius: 25px;
+  padding: 10px 20px;
+  box-shadow: 0px 6px 24px -3px rgba(0,0,0,.15);
 }
+
+.switch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 30px;
+  background-color: #f0f0f0;
+  margin-left: 20px;
+  padding: 0px 5px;
+  border-radius: 50px;
+  transition: all .5s ease;
+}
+
+.switch::before {
+  content: 'ON';
+  left: 5px;
+  color: #3AD78D;
+}
+
+.switch::after {
+  content: 'OFF';
+  right: 5px;
+  color: #d9d9d9;
+}
+
+.switch::after, .switch::before {
+  position: absolute;
+  font-size: 9px;
+  font-family: 'WorkSans-Bold';
+}
+
+input#availability-toggle {
+  opacity: 0;
+}
+
+.switch label {
+  z-index: 2;
+  position: absolute;
+  background: #d9d9d9;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  transition: all .5s ease;
+  cursor: pointer;
+}
+
+.switch input[type=checkbox]:checked + label {
+   left: 35px;
+   background-color: #3AD78D;
+ }
+
 </style>
