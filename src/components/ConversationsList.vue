@@ -195,4 +195,14 @@ input#availability-toggle {
    background-color: #3AD78D;
  }
 
+@media all and (max-width: 360px) {
+  /* Rule to display availability toggle under conversations */
+  #conversations {
+    padding-bottom: 80px;
+  }
+
+  .availability-setting {
+    bottom: 15px;
+  }
+}
 </style>
