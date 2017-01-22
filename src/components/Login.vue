@@ -42,13 +42,15 @@ export default {
       this.email = '';
       this.password = '';
     },
-    subscribeSw: function(applicationServerPublicKey) {
+    subscribeSw: function(applicationServerPublicKey, token) {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
         console.log('Service Worker and Push is supported');
 
         // Register a Service Worker.
         navigator.serviceWorker.register('static/service-worker.js')
         .then(function(registration) {
+          console.log('Registered service worker');
+
           // Force update of service worker
           registration.update();
 
@@ -57,6 +59,7 @@ export default {
           .then(function(subscription) {
             // If a subscription was found, return it.
             if (subscription) {
+              console.log('Already a subscription: ', subscription);
               return subscription;
             }
 
@@ -81,7 +84,25 @@ export default {
             return registration.pushManager.subscribe({ userVisibleOnly: true,
             applicationServerKey: convertedVapidKey});
           });
-        })
+        }).then(function(subscription) {
+          // Retrieve the user's public key.
+          console.log('Retrieving user key...');
+
+          this.subscription = subscription;
+          console.log('Subscription added: ', subscription);
+
+          // Uncomment to test service workers
+          // const payload = {
+          //   subscription: subscription,
+          //   notification: {
+          //     title: 'Bob',
+          //     body: 'heeeey it should work',
+          //     icon: '/static/img/favicon.png'
+          //   },
+          //   token: token
+          // };
+          // this.$socket.emit('swSendNotification', payload);
+        }.bind(this))
         .catch(function(error) {
           console.error('Service Worker Error: ', error);
         });
@@ -97,7 +118,8 @@ export default {
       localStorage.setItem('qowala-availability', payload.availability);
       console.log('redirecting to conversations list');
       // Subscribe to service worker to get notifications
-      this.subscribeSw(payload.applicationServerPublicKey);
+      this.subscribeSw(payload.applicationServerPublicKey, payload.token);
+
       this.$router.push('/');
     },
     'login failed': function () {
