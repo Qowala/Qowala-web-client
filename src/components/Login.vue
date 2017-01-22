@@ -47,7 +47,7 @@ export default {
         console.log('Service Worker and Push is supported');
 
         // Register a Service Worker.
-        navigator.serviceWorker.register('static/service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
         .then(function(registration) {
           console.log('Registered service worker');
 
