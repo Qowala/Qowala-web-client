@@ -3,7 +3,7 @@
   "name": "Qowala messaging app",
   "icons": [
     {
-      "src": "static/img/favicon.png",
+      "src": "img/favicon.png",
       "sizes": "152x152",
       "type": "image/png"
     }
