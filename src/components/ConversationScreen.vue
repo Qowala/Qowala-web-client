@@ -25,7 +25,8 @@ export default {
     return {
       messageInput: '',
       messages: [],
-      availability: 'Available',
+      currentAvailability: localStorage.getItem('qowala-availability') || 'available',
+      isWindowBlured: true
     };
   },
   computed: {
@@ -45,6 +46,16 @@ export default {
       conversationID: this.$route.params.conversationID
     };
     this.$socket.emit('get/conversationHistory', payload);
+
+    window.onblur = function() {
+      this.isWindowBlured = true;
+      console.log('blured: ', this.isWindowBlured);
+    }
+
+    window.onfocus = function() {
+      this.isWindowBlured = false;
+      console.log('blured: ', this.isWindowBlured);
+    }
   },
   methods: {
     sendMsg: function sendMsg() {
@@ -59,25 +70,15 @@ export default {
       }
     },
     notifyMe: function notifyMe(msg) {
-      const notifMsg = 'Qowala: ' + msg;
-      // Let's check whether notification permissions have already been granted
-      if (Notification.permission === "granted") {
-        // If it's okay let's create a notification
-        var notification = new Notification(notifMsg);
+      const options = {
+        body: msg,
+        icon: '/static/img/favicon.png'
       }
 
-      // Otherwise, we need to ask the user for permission
-      else if (Notification.permission !== 'denied') {
-        Notification.requestPermission(function requestPermission (permission) {
-          // If the user accepts, let's create a notification
-          if (permission === "granted") {
-            var notification = new Notification(notifMsg);
-          }
-        });
-      }
+      Notification.requestPermission().then(function(result) {
+      });
 
-      // At last, if the user has denied notifications, and you
-      // want to be respectful there is no need to bother them any more.
+      const notification = new Notification('New message:', options);
     },
     returnBack: function returnBack() {
       this.$router.push('/');
@@ -97,7 +98,7 @@ export default {
       }
 
 			// Send notification only if user available
-			if (this.availability === 'Available') {
+			if (this.currentAvailability === 'available' && this.isWindowBlured) {
 				this.notifyMe(msg.body);
 			}
 		},

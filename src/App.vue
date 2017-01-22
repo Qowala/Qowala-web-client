@@ -23,7 +23,7 @@ export default {
 html, body{ margin:0; padding:0; height:100%; width:100%; }
 body { font: 13px 'WorkSans-Regular', Arial, sans-serif; }
 #app {
-	height: 100%;
-	overflow-x: hidden;
+  height: 100%;
+  overflow-x: hidden;
 }
 </style>

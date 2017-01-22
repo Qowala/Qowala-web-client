@@ -72,7 +72,17 @@ export default {
 }
 
 .conversation-img-default {
-  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+
+.conversation-img-default::before {
+  content: '\2665';
+  color: #2AD78D;
+  opacity: .6;
+  font-family: 'WorkSans-Bold';
 }
 
 .conversation-name {
@@ -107,7 +117,9 @@ export default {
 
 .conversation-snippet-attachment {
   position: relative;
-  top: 10px;
+  max-width: 20px;
+  top: 5px;
   left: 60px;
+  border-radius: 2px;
 }
 </style>
