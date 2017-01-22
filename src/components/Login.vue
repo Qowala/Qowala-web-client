@@ -91,17 +91,18 @@ export default {
           this.subscription = subscription;
           console.log('Subscription added: ', subscription);
 
-          // Uncomment to test service workers
-          // const payload = {
-          //   subscription: subscription,
-          //   notification: {
-          //     title: 'Bob',
-          //     body: 'heeeey it should work',
-          //     icon: '/img/favicon.png'
-          //   },
-          //   token: token
-          // };
-          // this.$socket.emit('swSendNotification', payload);
+          // The notification will only display if server is on development mode
+          const payload = {
+            subscription: subscription,
+            notification: {
+              title: 'Bob',
+              body: 'Hey, this is a test notification',
+              icon: '/img/favicon.png'
+            },
+            token: token
+          };
+
+          this.$socket.emit('swSendNotification', payload);
         }.bind(this))
         .catch(function(error) {
           console.error('Service Worker Error: ', error);
