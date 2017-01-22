@@ -7,7 +7,7 @@ self.addEventListener('push', function(event) {
     var payload = {
       title: 'Empty title',
       body: 'no payload',
-      icon: '/static/img/favicon.png'
+      icon: '/img/favicon.png'
     };
   }
 

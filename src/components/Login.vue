@@ -97,7 +97,7 @@ export default {
           //   notification: {
           //     title: 'Bob',
           //     body: 'heeeey it should work',
-          //     icon: '/static/img/favicon.png'
+          //     icon: '/img/favicon.png'
           //   },
           //   token: token
           // };
