@@ -57,6 +57,12 @@ export default {
       console.log('blured: ', this.isWindowBlured);
     }
   },
+  mounted: function () {
+    this.scrollBottom();
+  },
+  updated: function () {
+    this.scrollBottom();
+  },
   methods: {
     sendMsg: function sendMsg() {
       if (this.isSendingEnabled) {
@@ -71,6 +77,13 @@ export default {
     },
     returnBack: function returnBack() {
       this.$router.push('/');
+    },
+    scrollBottom: function scrollBottom() {
+      console.log('Scrolling down!');
+      const lastItem = document.querySelector('#messages li:last-child');
+      if(lastItem) {
+        lastItem.scrollIntoView();
+      }
     }
   },
 	sockets: {
