@@ -84,6 +84,11 @@ export default {
       };
       this.$socket.emit('get/conversations', payload);
 		},
+    'return/availability': function(availability) {
+      console.log('Info: availability synced from server');
+      this.currentAvailability = availability;
+      localStorage.setItem('qowala-availability', this.currentAvailability);
+    },
     'need auth': function () {
       console.log('redirecting to login');
       this.$router.push('/login');
